@@ -1,0 +1,538 @@
+/*
+==============
+Fonts
+==============
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+/*
+==============
+Variables
+==============
+*/
+:root{
+
+    --black: #222;
+    --clr-brown:#ce9c6b;
+    --ff-primary: 'Poppins',sans-serif;
+    --ff-secondary: Arial, Helvetica, sans-serif;
+    --transition : all 0.3 linear;
+    --spacing: 0.25rem;
+
+    --light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    --dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+}
+
+/*
+==============
+Global Styles
+==============
+*/
+
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: var(--ff-primary);
+    /* background-color:  */
+    color: gray;
+    line-height: 1.5;
+    font-size: 1.25rem;
+
+
+}
+
+ul{
+    list-style-type: none;
+}
+
+a{
+    text-decoration: none;
+}
+
+img{
+    /* display: block; */
+}
+
+p{
+    margin: 0;
+    margin-bottom: 1rem;
+    max-width: 70%;
+}
+
+h1,
+h2,
+h3,
+h4{
+    letter-spacing: var(--spacing);
+    text-transform: capitalize;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+    font-family: var(--ff-primary);
+    
+}
+
+@media screen and (min-width: 800px) {
+    h1 {
+        font-size: 4rem;
+    }
+    h2 {
+        font-size: 2.5rem;
+    }
+    h3 {
+        font-size: 2rem;
+    }
+    h4 {
+    font-size: 1rem;
+    }
+    body{
+        font-size: 1rem;
+    }
+    h1,
+    h2,
+    h3,
+    h4 {
+        line-height: 1.25;
+    }
+}
+
+/* global classes */
+
+.btn{
+    font-size: 0.875rem;
+    border: 1px solid var(--clr-brown);
+    border-radius: 2rem;
+    padding:1rem;
+    background-color: var(--clr-brown);
+    color:white;
+    font-weight: 500;
+}
+.btn:hover{
+
+    background:transparent;
+    color:var(--clr-brown);
+}
+
+.container{
+    margin: 0 auto;
+    height: 100%;
+    width: 90%;
+    
+}
+
+.center{
+    margin: 0 auto;
+}
+
+section{
+    padding-bottom: 8rem;
+}
+
+
+/*
+=============== 
+Navbar
+===============
+*/
+
+nav{
+    width: 100%;
+    position: absolute;
+    height: 6rem;
+    display: flex;
+    /* background-color: #1b1b1b; */
+    background: transparent;
+    font-size: 0.875rem;
+    padding:0.5rem 0.1rem;
+    z-index:1;
+}
+
+.new-background{
+    background-color: #1b1b1b;
+    position: fixed;
+}
+
+.nav-center{
+    width:90%;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.nav-links{
+    margin-left: auto;
+    display: flex;
+    color: rgba(255, 255, 255, 0.7);
+}
+.navbar li{
+    margin-left:40px;
+}
+
+a{
+    color: rgba(255, 255, 255, 0.7);
+
+}
+
+a:active,a:hover,.active{
+    color: #ce9c6b;
+    font-weight: 800;
+}
+
+#logo{
+    height:40px;
+    background-color: #1b1b1b;
+    /* margin-top: 10px; */
+    background-color: transparent;
+}
+
+
+/*
+=============== 
+Hero
+===============
+*/
+
+.hero-wrapper{
+    background: linear-gradient(rgba(0, 0, 0, 0.548),rgba(15, 15, 15, 0.459)),url("../images/hero.jpg");
+
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position:center;
+}
+
+.hero-wrapper .container{
+    display: flex;
+    align-items: center;
+}
+
+.text-container{
+    color:white;
+    max-width: 40%;
+    /* max-height: 50%; */
+    margin: 6rem 0;
+
+}
+
+.text-container h1{
+    font-family: 'Times New Roman', Times, serif; 
+    margin-bottom: 3.5rem;
+    font-size:2.0rem;
+    letter-spacing:3px;
+    font-weight: 400;
+}
+
+.text-container h4{
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/*
+=============== 
+Intro
+===============
+*/
+
+.intro{
+    
+    width: 100%;
+    background-color: #1b1b1b;
+    padding: 5rem 0;
+    color: white;
+}
+
+.intro h2{
+    /* font-size: 2em; */
+    text-align: center;
+    margin-bottom:1.5em;
+    text-transform: capitalize;
+    /* letter-spacing: 2px; */
+}
+
+.title{
+    color: #ce9c6b ;
+}
+
+.intro p{
+    font-family: Arial, Helvetica, sans-serif;
+    color:gray;
+    text-align: center;
+    letter-spacing: 3px;
+    line-height: 2em;
+}
+.intro>p{
+    margin-bottom: 2em;
+}
+
+.intro iframe{
+    filter: grayscale(50%) invert(100%) contrast(100%);
+}
+/*
+=============== 
+Info
+===============
+*/
+.info{
+    border-top:1px solid #ce9c6b;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 900;
+    border-bottom: 2px solid var(--clr-brown);
+    
+}
+
+.info h3{
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.map-center{
+    padding: 0 3rem;
+}
+
+/*
+=============== 
+Music
+===============
+*/
+.music{
+    background: linear-gradient(#000,#1b1b1b);
+    margin-bottom: -200px;
+}
+.music>.container{
+    width: 75%;
+    padding: 6rem 2rem 8rem 2rem;
+}
+
+.music h3{
+    text-align: center;
+    text-transform: none;
+    margin-bottom: 4rem;
+    color: aliceblue;
+    
+}
+
+/*
+=============== 
+Services
+===============
+*/
+.header-design{
+    position: relative;display: flex;justify-content: center;width: 100%;
+}
+
+.header-img{
+    background-color: #775737;
+}
+
+.line{
+    position: absolute;
+    width: 100%;
+    /* height: 3px; */
+    border-top: 6px solid black;
+    top: 100px;
+}
+
+.menu{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:6rem;
+    padding-bottom: 5rem;
+}
+
+.services{
+    background-color: #ce9c6b ;;
+    /*background-color: #1b1b1b;;*/
+    color: black;
+    padding-bottom: 9rem;
+}
+
+.services h2{
+    color: #222;
+    text-align: center;
+    padding-bottom: 6rem;
+    font-weight: bold;    
+}
+
+.services h3{
+    text-align: center;
+    padding-bottom: 2rem;
+    letter-spacing: 0em;
+}
+
+.services p{
+    text-align: center;
+}
+
+#services-book-btn{
+background: black;padding: 1em 3em;color: #ce9c6b; font-size: 1rem;font-weight: bold;border:1px solid black;
+}
+#services-book-btn:hover{
+    opacity: 0.8;
+}
+#services{
+    color:  #222;
+}
+
+/*
+=============== 
+Team
+===============
+*/
+.team{    
+    background-color: black;
+    padding-top: 1rem;
+}
+
+.team h2{
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+.flip-card {
+    background-color: transparent;
+    width: 350px;
+    height: 300px;
+    border: 1px solid #f1f1f1;
+    perspective: 1000px; 
+    padding: 20px;
+    
+}
+/* This container is needed to position the front and back side */
+    .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+/* Do an horizontal flip when you move the mouse over the flip box container */
+    .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+/* Position the front and back side */
+    .flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+    /*border-radius: 100px;*/
+}
+/* Style the front side (fallback if image is missing) */
+    .flip-card-front {
+    background-color: #bbb;
+    color: black;
+}
+/* Style the back side */
+.flip-card-back {
+    background-color: #2e2318;
+    color: white;
+    padding-left: 10px;
+    text-align: center;
+    transform: rotateY(180deg);
+}
+.barbers{
+    /* align-items: center; */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 10px;
+    gap: 2rem;
+    margin:0 auto;
+    width: 95%;
+    margin-left: 65px;
+}
+.barbers h1{
+    font-size: 1rem;
+    padding: 1rem;
+    text-align: center;
+}
+.barbers p{
+    text-align: center;
+    margin-left: 50px;
+}
+
+/*
+=============== 
+Interior
+===============
+*/
+
+.interior{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: #3b3b3b;
+    padding: 4rem;
+}
+.int-txt{
+    padding: 3rem;
+    text-align: center;
+    color:  rgb(168, 165, 165);
+    font-size: 1.5rem;
+}
+.int-line{
+    border-top: 2px solid white;
+}
+
+/*
+=============== 
+Footer
+===============
+*/
+
+footer{
+    background-color: #1b1b1b;
+    color: white;   
+    padding: 3em 0;
+
+    
+}
+footer .container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-bottom: 10px;
+    
+}
+.about-container>div{
+    padding: 3rem;
+}
+footer h2{
+    margin-bottom: 2rem;    
+    font-size: 1.5rem;
+}
+footer p{
+    max-width:40ch;
+    color:rgba(255, 255, 255, 0.7);
+    text-align: justify;
+}
+footer p a{
+    font-size: 1rem;
+    color: white;
+    border: 1px solid #ce9c6b;
+    padding: 0.5rem;
+    border-radius: 20px;
+}
+
+li{
+    display: inline-block;
+}
+
+.media{
+    margin-top: 2rem;
+}
+footer a{
+    font-size: 50px;
+    margin-right: 20px;
+    color: white;
+    
+}
