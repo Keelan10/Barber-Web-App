@@ -203,43 +203,43 @@
                 const orderId = $(event.currentTarget).attr("id")
                 $("#orderNo").text(orderId)
 
+                // console.log("here")
+                $.ajax({
+                    url: "getPurchasedItems.php",
+                    type:"POST",
+                    data: {orderId: orderId},
+                    dataType: "JSON",
+                    success: function(data) {
+                        // console.log(data)
+                        var result =""
+                        var sum=0;
 
-                $.ajax(
-                    "getPurchasedItems.php", {
-                        data: {
-                            orderId: orderId
-                        },
-                        dataType: "JSON",
-                        success: function(data) {
-                            // console.log(data)
-                            var result =""
-                            var sum=0;
-
-                            for (var i = 0; i < data.length; i++) {
-                                sum+=parseInt(data[i].totalPerProduct)
-                                result+=
-                                `<tr>
-                                    <td>${data[i].product_name} (x${data[i].quantity})</td>
-                                    <td class="alignright">Rs ${parseInt(data[i].totalPerProduct)}</td>
-                                </tr>`
-
-                            }
-
-                            // console.log(sum)
+                        for (var i = 0; i < data.length; i++) {
+                            sum+=parseInt(data[i].totalPerProduct)
                             result+=
-                            `<tr class="total">
-                                <td class="alignright" width="80%">Total</td>
-                                <td class="alignright">Rs ${sum}</td>
-                            </tr>`;
-                            // console.log(result)
-                            $(".items-container").html(result)
-                            $("#date").text(data[0].date)
+                            `<tr>
+                                <td>${data[i].product_name} (x${data[i].quantity})</td>
+                                <td class="alignright">Rs ${parseInt(data[i].totalPerProduct)}</td>
+                            </tr>`
 
-                            $(".overlay").show()
                         }
-                    })
+
+                        // console.log(sum)
+                        result+=
+                        `<tr class="total">
+                            <td class="alignright" width="80%">Total</td>
+                            <td class="alignright">Rs ${sum}</td>
+                        </tr>`;
+                        // console.log(result)
+                        $(".items-container").html(result)
+                        $("#date").text(data[0].date)
+
+                        $(".overlay").show()
+                    }
+                })
 
             })
+
             $(".fa-times").click(function() {
                 $(".overlay").hide()
             })
