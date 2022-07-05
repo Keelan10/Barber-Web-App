@@ -151,7 +151,7 @@
                 // $_SESSION["userid"]=1;
                 // echo $_SESSION["userid"];
                 $sql =
-                    "select payment.paymentid,payment.paymentdate,orderdetails.orderid,SUM(product.price*orderdetails.quantity) AS total_price
+                    "select payment.paymentid,payment.paymentdate,orderdetails.orderid,SUM(unit_price*orderdetails.quantity) AS total_price
                     from transactions,customer,orders,orderdetails,product,payment
                     where customer.customerid=" . $conn->quote($_SESSION["customer_userid"]) . "
                     AND transactions.customerid=customer.customerid
