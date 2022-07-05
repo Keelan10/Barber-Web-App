@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchase History</title>
+    <!-- SWEET ALERT -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .overlay {
             display: none;
@@ -148,8 +150,7 @@
             <tbody>
                 <?php
                 require_once("includes/database.php");
-                // $_SESSION["userid"]=1;
-                // echo $_SESSION["userid"];
+                
                 $sql =
                     "select payment.paymentid,payment.paymentdate,orderdetails.orderid,SUM(unit_price*orderdetails.quantity) AS total_price
                     from transactions,customer,orders,orderdetails,product,payment
@@ -160,7 +161,7 @@
                     AND product.productid=orderdetails.productid
                     AND transactions.paymentid=payment.paymentid
                     GROUP BY orders.transactionid
-                    ORDER BY orderdetails.orderid;
+                    ORDER BY paymentdate DESC;
                     ";
 
 
@@ -198,6 +199,16 @@
     </body>
     <script>
         $("body").ready(function() {
+
+            <?php
+                if(isset($_GET["referrer"]) && $_GET["referrer"]=="shop"){
+                    echo "Swal.fire(
+                        'Purchase successful!',
+                        'Thank you for your purchase.',
+                        'success'
+                      )";
+                }
+            ?>
 
             $(".click-receipt").click(function(event) {
                 const orderId = $(event.currentTarget).attr("id")
