@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Schedule</title>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <?php 
         $active_menu="schedule";
@@ -101,12 +102,52 @@
 <script>
     $(document).ready(function(){
         $(".cancel").click(function(event){
-            // alert("Hi")
-            const transactionId=$(event.currentTarget).attr("id")
+
+            const transactionid = $(this).attr("id")
+            const row = $(this).parents("tr");
+            const adjacent_TR_Length = $(this).parents("tr").siblings().length; 
+
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, go ahead!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.post(
+                    "cancelTransaction.php",
+                    {transactionid: transactionid},
+                    function(data){
+                        if (data=="success"){
+
+                            if (adjacent_TR_Length==0){
+                                $(row).parent().html(`<td colspan=\"100%\" style=\"text-align: center;background-color:#F2F2F2\"> No upcoming appointment </td>`)
+                            }else{
+                                row.remove()
+                            }
+
+                            Swal.fire(
+                                'Cancellation successful!',
+                                'Your appointment has been cancelled',
+                                'success'
+                            )
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                            })
+                        }
+                    }
+                );
+            }
+            })
+
             
-            //to do cancel appointment 
-
-
 
         })
     })
