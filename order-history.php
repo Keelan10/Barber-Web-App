@@ -124,7 +124,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <!-- <td class="content-block"> Company Inc. 123 Van Ness, San Francisco 94102</td> -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -161,7 +160,7 @@
                     AND product.productid=orderdetails.productid
                     AND transactions.paymentid=payment.paymentid
                     GROUP BY orders.transactionid
-                    ORDER BY paymentdate DESC;
+                    ORDER BY paymentdate DESC,orderid DESC;
                     ";
 
 
