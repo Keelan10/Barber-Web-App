@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles/shop.css">
     <script src="https://kit.fontawesome.com/65310733dc.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- SWEET ALERT -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./js/shop.js"></script>
 </head>
 
@@ -85,7 +87,7 @@
                     while ($row = $result->fetch()) :
                 ?>
 
-                        <article class="<?php if ($row["quantity"] != 0) echo "addToCart";?>">
+                        <article id='<?php echo $row["productid"]?>' class="<?php if ($row["quantity"] != 0) echo "addToCart";?>">
                             <div class="product-image-container">
                                 <img width="100%" height="100%" src="images/product/<?php echo $row['image_name']; ?> " alt="">
                             </div>

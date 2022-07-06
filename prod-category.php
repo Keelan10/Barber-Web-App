@@ -14,7 +14,7 @@
     $a=array();
 
     while($row=$results->fetch()){
-        $entry=array("name"=>$row["product_name"],"price"=>$row["price"],"image"=>$row["image_name"],"qty"=>$row["quantity"]);
+        $entry=array("name"=>$row["product_name"],"price"=>$row["price"],"image"=>$row["image_name"],"qty"=>$row["quantity"], "id"=>$row["productid"]);
         array_push($a,$entry);
     }
     
