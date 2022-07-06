@@ -16,7 +16,7 @@
     ?>
     <div class="overlay"></div>
     <div class="popup card">
-        <span class="popup-message">FBEEJFEKABFEAFEKABAE FAEKBJAEF </span>
+        <span class="popup-message"></span>
     </div>
     <div class="modal">
         <div class="header">
@@ -48,10 +48,6 @@
                 <div class="card-header">
 
                     <h5 class="card-title mb-0">Accounts</h5>
-                        <!-- <div class="input-wrapper">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                            <input type="text" placeholder="Search email" class="search-bar" onkeyup="search()">
-                        </div> -->
                    
                 </div>
                 <table class="table table-hover my-0">
@@ -123,22 +119,17 @@
                 const accountName = main.children(".message").children("p").children("#accountName").text()
                 const accountType = main.children(".message").children("p").children("#accountType").text()
                 const accountEmail = main.children(".message").children("p").children("#accountEmail").text()
-                // console.log(event.currentTarget)
+
                 $.ajax("delete.php", {
                     data: {
                         accountName: accountName,
                         accountType: accountType,
                         accountEmail: accountEmail
                     },
-                    // success: function()
                     success: function(data) {
                         loadAccounts();
                         hideModal();
 
-                        // $(".popup-message").text(data);
-                        // $(".popup").css("display","flex").delay(1500).fadeOut();
-                        
-                        // $(".popup").css("display","flex").delay(1500).hide("slow");
                         if (data=="success"){
                             Swal.fire(
                                 'Deletion successful!',
@@ -155,12 +146,6 @@
                         }
                     }
                 });
-                
-                // setTimeout(loadAccounts,5000); 
-                
-
-                // $(".overlay").hide();
-                // $(".modal").hide();
 
             }
 
@@ -170,13 +155,6 @@
 
 
             function loadAccounts() {
-
-                // $.ajax({
-                //     url: "loadAccounts.php",
-                //     context: document.body
-                // }).done(function(data) {
-                //     console.log(JSON.parse(data))
-                // });
                 
                 $.ajax({
                     url: "loadAccounts.php",
@@ -229,8 +207,6 @@
                                 <td class="d-none d-xl-table-cell">${admin[i].last_active}</td>
                                 <td class="type d-none d-xl-table-cell" colspan="2">Admin</td>
                                 </tr>`
-                                //<td><i class="fa fa-trash" style="cursor:pointer" name="admin-${admin[i].adminid}"></i></td>
-
                             }
                             
                             
