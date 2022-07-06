@@ -99,14 +99,14 @@
                     </li>
 
                     <li class="sidebar-item <?php if($activeMenu=="orders") echo "active"?>">
-                        <a class="sidebar-link" href="#">
+                        <a class="sidebar-link" href="view-order.php">
                             <i class="fas fa-store"></i>
                             <span class="align-middle">Orders</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item <?php if($activeMenu=="appointments") echo "active"?>">
-                        <a class="sidebar-link" href="#">
+                        <a class="sidebar-link" href="view-appointment.php">
                             <i class="fas fa-calendar"></i>
                             <span class="align-middle">Appointments</span>
                         </a>
