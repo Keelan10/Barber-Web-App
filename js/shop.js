@@ -127,31 +127,15 @@ $(document).ready(function () {
     })
 
     $(".cart-items").on("click", ".remove-item", addRemoveAction)
+    
     $(".cart-items").on("input", "input", function () {
-        updateCartTotal()
+
         updatePricePerRow(this)
-    })
-
-    // if quantity changes, store in localstorage
-    $(document).on("change", ".item-qty", function () {
-
-        const productName = $(this).parents(".product-info").find("h5").text()
-        // console.log(productName)
-
-        var products = JSON.parse(localStorage.getItem("cart")); //grab products in cart from localStorage
-
-        for (var i = 0; i < products.length; i++) {
-            // console.log(products[i].name+" "+productName)
-            if (products[i].name == productName) {
-                // console.log($(this).val())
-                products[i].qty = $(this).val()
-                // console.log(products);
-                localStorage.setItem("cart", JSON.stringify(products));
-                break;
-            }
-        }
+        updateCartTotal()
 
     })
+
+
 
     //Display by category
     /*
@@ -326,7 +310,7 @@ function addRemoveAction(button) {
     updateCartRelatedInfoOnPage();
 }
 
-//function to update price per row
+//function to update price per row and update local storage
 function updatePricePerRow(field) {
     const inputField = $(field)
     // console.log(inputField)
@@ -339,15 +323,32 @@ function updatePricePerRow(field) {
         $(field).val(1)
     }
 
+    // return;
     $.ajax("getItemPrice.php", {
         data: { name: productName },
         success: function (data) {
             data = JSON.parse(data)
             if (qty > data.quantity) {
                 qty = data.quantity
-                inputField.val((qty))
+                inputField.val((data.quantity))
             }
 
+
+            //update localstorage with latest info
+            var products = JSON.parse(localStorage.getItem("cart")); //grab products in cart from localStorage
+
+            for (var i = 0; i < products.length; i++) {
+
+                if (products[i].name == productName) {
+
+                    products[i].qty = qty
+                    products[i].price = data.price
+                    localStorage.setItem("cart", JSON.stringify(products));
+                    break;
+
+                }
+            }
+            
             const price = data.price;
             if (qty == "") {
                 $(productInfo).find(".item-price").text(Math.round(price))
