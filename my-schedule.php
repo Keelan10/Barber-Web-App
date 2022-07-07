@@ -120,7 +120,7 @@
 
                 $.post(
                     "cancelTransaction.php",
-                    {transactionid: transactionid},
+                    {transactionid: transactionid, option: "appointment"},
                     function(data){
                         if (data=="success"){
 

@@ -113,6 +113,9 @@
                                                         <td><span id="customer-name"><?= $_SESSION["customer_username"]?></span><br>Invoice #<span id="orderNo"><span><br><span id="date"><span></td>
                                                     </tr>
                                                     <tr>
+                                                        <td style="color:red" id="cancelled"></td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>
                                                             <table class="invoice-items" cellpadding="0" cellspacing="0">
                                                                 <tbody class="items-container"></tbody>
@@ -144,6 +147,7 @@
                     <th>Details</th>
                     <th style="width:8%">Amount paid</th>
                     <th style="width:10%">Payment Ref</th>
+                    <th style="width:8%">Cancel</th>
                 </tr>
             </thead>
             <tbody>
@@ -151,7 +155,7 @@
                 require_once("includes/database.php");
                 
                 $sql =
-                    "select payment.paymentid,payment.paymentdate,orderdetails.orderid,SUM(unit_price*orderdetails.quantity) AS total_price
+                    "select payment.paymentid,payment.paymentdate,orderdetails.orderid,SUM(unit_price*orderdetails.quantity) AS total_price,picked, is_cancelled
                     from transactions,customer,orders,orderdetails,product,payment
                     where customer.customerid=" . $conn->quote($_SESSION["customer_userid"]) . "
                     AND transactions.customerid=customer.customerid
@@ -185,8 +189,14 @@
                         echo "<td>#" . $row["orderid"] . "</td>";
                         echo "<td>" . $row["paymentdate"] . "</td>";
                         echo "<td style=\"cursor:pointer; color:#003f87;font-weight: 500;\" id=\"" . $row["orderid"] . "\" class='click-receipt'>Click here for complete receipt</td>";
-                        echo "<td>Rs " . round($row["total_price"], 0) . "</td>";
-                        echo "<td>#" . $row["paymentid"] . "</td></tr>";
+                        echo "<td>Rs <span class='price-paid'>" . round($row["total_price"], 0) . "</span></td>";
+                        echo "<td>#" . $row["paymentid"] . "</td>";
+                        if (!$row["picked"] && !$row["is_cancelled"]){
+                            echo "<td style=\"cursor:pointer; color:#003f87;font-weight: 500;\" id=\"" . $row["orderid"] . "\" class='cancel-order'>Cancel</td>";
+                        }else{
+                            echo "<td></td>";
+                        }
+                        echo "</tr>";
                     }
                 }
 
@@ -223,27 +233,29 @@
                         // console.log(data)
                         var result =""
                         var sum=0;
-
+                        
                         for (var i = 0; i < data.length; i++) {
                             sum+=parseInt(data[i].totalPerProduct)
                             result+=
                             `<tr>
                                 <td>${data[i].product_name} (x${data[i].quantity})</td>
                                 <td class="alignright">Rs ${parseInt(data[i].totalPerProduct)}</td>
-                            </tr>`
-
-                        }
-
+                                </tr>`
+                                
+                            }
+                            
                         // console.log(sum)
                         result+=
                         `<tr class="total">
-                            <td class="alignright" width="80%">Total</td>
-                            <td class="alignright">Rs ${sum}</td>
+                        <td class="alignright" width="80%">Total</td>
+                        <td class="alignright">Rs ${sum}</td>
                         </tr>`;
                         // console.log(result)
                         $(".items-container").html(result)
                         $("#date").text(data[0].date)
-
+                        if(data[0].is_cancelled) $("#cancelled").text("Cancelled")
+                        else $("#cancelled").text("")
+                        
                         $(".overlay").show()
                     }
                 })
@@ -252,6 +264,47 @@
 
             $(".fa-times").click(function() {
                 $(".overlay").hide()
+            })
+
+            $(".cancel-order").click(function(){
+                const transactionid= $(this).attr("id");
+                const cancel = this
+                const pricePaid = $(this).siblings().children(".price-paid")
+
+
+                Swal.fire({
+                title: 'Are you sure?',
+                text: "Note that you will only get 70% refund!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed it!'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post("cancelTransaction.php", {transactionid: transactionid, option: "order"}, function(data){
+                        if (data=="success"){
+                            pricePaid.text((0.3* parseInt(pricePaid.text()).toFixed(0)))
+                            $(cancel).replaceWith("<td></td>");
+                            Swal.fire(
+                                'Cancelled!',
+                                'Your order has been cancelled.',
+                                'success'
+                                )
+                        }
+                        else{
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred',
+                                'error'
+                                )
+                        }
+                    })
+
+                    
+
+                }
+                })
             })
         })
     </script>
