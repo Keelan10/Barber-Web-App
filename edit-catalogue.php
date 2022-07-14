@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,31 +9,31 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-       
-        .products-container{
+        .products-container {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             grid-gap: 1rem;
         }
 
-        .product-image-container{
+        .product-image-container {
             padding: 2rem;
             /* width: 100px; */
             height: 150px;
         }
-        .row-head{
-            display:flex;
+
+        .row-head {
+            display: flex;
             flex-direction: row;
             justify-content: space-between;
         }
-        article.card{
+
+        article.card {
             padding: 0.25rem 1rem;
         }
-
     </style>
 
     <?php
-    $_SESSION["username"] = "Tom Cruise";
+    // $_SESSION["username"] = "Tom Cruise";
     $activeMenu = "catalogue";
     require_once("includes/database.php");
     include_once("includes/admin-menu.php");
@@ -67,9 +67,9 @@
                 </div>
             </div>
 
-            
-                
-            
+
+
+
             <?php
             $sql = "SELECT * FROM product";
             $result = $conn->query($sql);
@@ -81,31 +81,34 @@
             ?>
 
                     <article class="card">
+                        <i class="fas fa-check" class="tickUpdate" style="color:green;padding-top:1rem;display:none;"></i>
                         <div class="product-image-container">
+                            <!-- <i class="fas fa-check-double" style="color:green;"></i> -->
                             <img width="100%" height="100%" src="images/product/<?php echo $row['image_name']; ?> " alt="">
                         </div>
                         <div class="info">
                             <p style="font-size:15px;line-height:1.5em;letter-spacing:0.5px" class="product-name" contenteditable="true" spellcheck=”false”><?= $row['product_name']; ?></p>
                             <div class="row-head">
-                                <h6 style="letter-spacing:0.5px">Rs<span id="price" contenteditable="true" spellcheck=”false”> <?php echo $row["price"] ?></span></h6>
+                                <h6 style="letter-spacing:0.5px">Rs<span id="price" class="<?php echo $row["productid"] ?>" contenteditable="true" spellcheck=”false”> <?php echo $row["price"] ?></span></h6>
                                 <i class="fa fa-trash delete-product" style="cursor:pointer"></i>
                             </div>
                         </div>
                         <?php
                         ?>
                     </article>
-            <?php endwhile;
-            }else{ ?>
+                <?php endwhile;
+            } else { ?>
 
-            <div class="card" style="height: 100%;">
-                No product in catalogue
-                <a href="add-product.php">Click here to add</a>
-            </div>
+                <div class="card" style="height: 100%;">
+                    No product in catalogue
+                    <a href="add-product.php">Click here to add</a>
+                </div>
 
-            <?php }//end else ?>
+            <?php } //end else 
+            ?>
 
-            </div>
-        
+        </div>
+
         </div>
     </main>
     </div>
@@ -116,31 +119,136 @@
     </body>
 
     <script>
-        $('body').attr("spellcheck",false)
+        $('body').attr("spellcheck", false)
 
-        function search(){
-            const input=$(".search-bar").val().toLowerCase();//for case insensitive search
-            const productNames=$(".product-name");
+        function search() {
+            const input = $(".search-bar").val().toLowerCase(); //for case insensitive search
+            const productNames = $(".product-name");
 
-            for (var i=0;i<productNames.length;i++){
+            for (var i = 0; i < productNames.length; i++) {
 
-                if($(productNames[i]).text().toLowerCase().indexOf(input)>-1){
+                if ($(productNames[i]).text().toLowerCase().indexOf(input) > -1) {
                     $(productNames[i]).parentsUntil(".products-container").show()
-                }
-                else{
+                } else {
                     $(productNames[i]).parentsUntil(".products-container").hide()
                 }
             }
 
         }
 
-        $(document).ready(function(){
+        $(document).ready(function() {
+
+            $("p.product-name").blur(function() {
+                $(this).parents(".card").children(".fa-check").show();
+                var tickUpdate = $(this).parents(".card").children(".fa-check");
+                const productID = $(this).siblings().children().children("span#price").attr("class")
+                var newProductPrice = $(this).siblings().children().children("span#price").text()
+                var newProductName = $(this).text();
+
+                $(tickUpdate).click(function() {
+                    Swal.fire({
+                        title: 'Do you want to save the changes?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Save',
+                        denyButtonText: `Don't save`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "updateProduct.php",
+                                data: {
+                                    productID: productID,
+                                    product_name: newProductName,
+                                    price: newProductPrice
+                                },
+                                method: "POST",
+                                success: function(result) {
+                                    console.log("Hello")
+                                    if (result == "success") {
+                                        Swal.fire(
+                                            'Update successful!',
+                                            'Product has been updated',
+                                            'success'
+                                        )
+                                        tickUpdate.hide();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Something went wrong!',
+                                            //Refresh Page
+                                        })
+                                    }
+                                },
+                                error: function(xhr) {
+                                    alert("An error occured: " + xhr.status + " " + xhr.statusText);
+                                }
+                            })
+                            // Swal.fire('Saved!', '', 'success')
+                        } else if (result.isDenied) {
+                            Swal.fire('Changes are not saved', '', 'info')
+                        }
+                    })
+                })
+            })
+
+            $("span#price").blur(function() {
+                $(this).parents(".card").children(".fa-check").show();
+                var tickUpdate = $(this).parents(".card").children(".fa-check");
+                const productID = $(this).attr("class");
+                var newProductName = $(this).parentsUntil("div#info").children("p.product-name").text();
+                var newProductPrice = $(this).text();
+                $(tickUpdate).click(function() {
+                    Swal.fire({
+                        title: 'Do you want to save the changes?',
+                        showDenyButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Save',
+                        denyButtonText: `Don't save`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "updateProduct.php",
+                                data: {
+                                    productID: productID,
+                                    product_name: newProductName,
+                                    price: newProductPrice
+                                },
+                                method: "POST",
+                                success: function(result) {
+                                    if (result == "success") {
+                                        Swal.fire(
+                                            'Update successful!',
+                                            'Product has been updated',
+                                            'success'
+                                        )
+                                        tickUpdate.hide();
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'Something went wrong!',
+                                            //Refresh Page
+                                        })
+                                    }
+                                },
+                                error: function(xhr) {
+                                    alert("An error occured: " + xhr.status + " " + xhr.statusText);
+                                }
+                            })
+                            // Swal.fire('Saved!', '', 'success')
+                        } else if (result.isDenied) {
+                            Swal.fire('Changes are not saved', '', 'info')
+                        }
+                    })
+                })
+            })
 
             $(".overlay").click(hideModal);
-            $(".choice>.fa-times").click(hideModal);
-            $(".choice>.fa-check").click(tickClicked);
+            $(".modal .choice>.fa-times").click(hideModal);
+            $(".modal .choice>.fa-check").click(tickClicked);
 
-            $(".delete-product").click(function(){
+            $(".delete-product").click(function() {
                 $(".overlay").show();
                 $(".modal").show();
                 // alert("clicked")
@@ -149,25 +257,31 @@
                 $("#product-name").text(productName)
             })
 
-            function hideModal(){
+            function hideModal() {
                 $(".overlay").hide();
                 $(".modal").hide();
             }
 
-            function tickClicked(){
-                const productName= $("#product-name").text();
-                
-                $.ajax("deleteProduct.php",{
-                    data : {productName:productName},
-                    success:function(data){
-                        if (data=="success"){
+            function hideUpdateModal() {
+                $(".overlay").hide();
+                $(".modal").hide();
+            }
+
+            function tickClicked() {
+                const productName = $("#product-name").text();
+
+                $.ajax("deleteProduct.php", {
+                    data: {
+                        productName: productName
+                    },
+                    success: function(data) {
+                        if (data == "success") {
                             Swal.fire(
                                 'Deletion successful!',
                                 'Account has been deleted',
                                 'success'
-                                )
-                            }
-                        else if (data=="failure"){
+                            )
+                        } else if (data == "failure") {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
@@ -175,137 +289,138 @@
                             })
                         }
                         hideModal();
-
                         //To do reload products!
                     }
                 })
 
-                
+
             }
+
+
         })
-    //     $(document).ready(function() {
+        //     $(document).ready(function() {
 
-    //         loadAccounts();
-    //         $(".overlay").click(hideModal);
+        //         loadAccounts();
+        //         $(".overlay").click(hideModal);
 
-    //         function trashClicked(event){
-    //             const tr = $(event.currentTarget).parentsUntil("tbody");
-    //             const name = tr.children(".name").text();
-    //             const type = tr.children(".type").text();
-    //             const email = tr.children(".email").text();
-                
-    //             $("#accountName").text(name);
-    //             $("#accountType").text(type);
-    //             $("#accountEmail").text(email);
-    //             $(".overlay").show();
-    //             $(".modal").show();
-    //         }
+        //         function trashClicked(event){
+        //             const tr = $(event.currentTarget).parentsUntil("tbody");
+        //             const name = tr.children(".name").text();
+        //             const type = tr.children(".type").text();
+        //             const email = tr.children(".email").text();
 
-    //         function hideModal(){
-    //             $(".overlay").hide();
-    //             $(".modal").hide();
-    //         }
+        //             $("#accountName").text(name);
+        //             $("#accountType").text(type);
+        //             $("#accountEmail").text(email);
+        //             $(".overlay").show();
+        //             $(".modal").show();
+        //         }
 
-    //         function tickClicked(event){
-    //             const main = $(event.currentTarget).parentsUntil(".main");
-    //             const accountName = main.children(".message").children("p").children("#accountName").text()
-    //             const accountType = main.children(".message").children("p").children("#accountType").text()
-    //             const accountEmail = main.children(".message").children("p").children("#accountEmail").text()
+        //         function hideModal(){
+        //             $(".overlay").hide();
+        //             $(".modal").hide();
+        //         }
 
-    //             $.ajax("delete.php", {
-    //                 data: {
-    //                     accountName: accountName,
-    //                     accountType: accountType,
-    //                     accountEmail: accountEmail
-    //                 },
-    //                 // success: function()
-    //                 success: function(data) {
-    //                     // alert(data);
-    //                     loadAccounts();
-    //                     hideModal();
-    //                 }
-    //             });
+        //         function tickClicked(event){
+        //             const main = $(event.currentTarget).parentsUntil(".main");
+        //             const accountName = main.children(".message").children("p").children("#accountName").text()
+        //             const accountType = main.children(".message").children("p").children("#accountType").text()
+        //             const accountEmail = main.children(".message").children("p").children("#accountEmail").text()
 
-    //         }
+        //             $.ajax("delete.php", {
+        //                 data: {
+        //                     accountName: accountName,
+        //                     accountType: accountType,
+        //                     accountEmail: accountEmail
+        //                 },
+        //                 // success: function()
+        //                 success: function(data) {
+        //                     // alert(data);
+        //                     loadAccounts();
+        //                     hideModal();
+        //                 }
+        //             });
 
-            
+        //         }
 
 
 
 
-    //         function loadAccounts() {
 
-                
-    //             $.ajax({
-    //                 url: "loadAccounts.php",
-    //                 dataType: "JSON",
-    //                 success: function(data) {
-    //                     console.log(data.length);
 
-    //                     if (data.length==0){
-    //                         const message=
-    //                         `<tr>
-    //                             <td colspan=100% style="text-align:center;background-color:#222e3c12">No account found</td>
-    //                         </tr>`
+        //         function loadAccounts() {
 
-    //                         $("tbody").html(message);
-    //                     }
-    //                     else{
 
-    //                         const barbers=data[0];
-    //                         const customers=data[1];
-    //                         const admin= data[2];
-    
-    //                         var result="";
-    //                         for (var i=0;i<barbers.length;i++){
-    //                             result+=
-    //                             `<tr>
-    //                             <td class="name">${barbers[i].first_name+" "+barbers[i].last_name}</td>
-    //                             <td class="email d-none d-xl-table-cell">${barbers[i].email}</td>
-    //                             <td class="d-none d-xl-table-cell">${barbers[i].last_active}</td>
-    //                             <td class="type d-none d-xl-table-cell">Barber</td>
-    //                             <td><i class="fa fa-trash" style="cursor:pointer" name="barber-${barbers[i].barberid}"></i></td>
-    //                             </tr>`
-    //                         }
-    
-    //                         for (var i=0;i<customers.length;i++){
-    //                             result+=
-    //                             `<tr>
-    //                             <td class="name">${customers[i].first_name+" "+customers[i].last_name}</td>
-    //                             <td class="email d-none d-xl-table-cell">${customers[i].email}</td>
-    //                             <td class="d-none d-xl-table-cell">${customers[i].last_active}</td>
-    //                             <td class="type d-none d-xl-table-cell">Customer</td>
-    //                             <td><i class="fa fa-trash" style="cursor:pointer" name="customer-${customers[i].customerid}"></i></td>
-    //                             </tr>`
-    //                         }
+        //             $.ajax({
+        //                 url: "loadAccounts.php",
+        //                 dataType: "JSON",
+        //                 success: function(data) {
+        //                     console.log(data.length);
 
-    //                         for (var i=0;i<admin.length;i++){
-    //                             result+=
-    //                             `<tr>
-    //                             <td class="name">${admin[i].first_name+" "+admin[i].last_name}</td>
-    //                             <td class="email d-none d-xl-table-cell">${admin[i].email}</td>
-    //                             <td class="d-none d-xl-table-cell">${admin[i].last_active}</td>
-    //                             <td class="type d-none d-xl-table-cell">Admin</td>
-    //                             <td><i class="fa fa-trash" style="cursor:pointer" name="admin-${admin[i].adminid}"></i></td>
-    //                             </tr>`
-    //                         }
-                            
-                            
-    //                         $("tbody").html(result);
-    
-    //                         $(".fa-trash").click(trashClicked);
-    //                         $(".choice>.fa-times").click(hideModal);
-    //                         $(".choice>.fa-check").click(tickClicked);
+        //                     if (data.length==0){
+        //                         const message=
+        //                         `<tr>
+        //                             <td colspan=100% style="text-align:center;background-color:#222e3c12">No account found</td>
+        //                         </tr>`
 
-    //                     }    
-                        
+        //                         $("tbody").html(message);
+        //                     }
+        //                     else{
 
-    //                 }
-    //             });
+        //                         const barbers=data[0];
+        //                         const customers=data[1];
+        //                         const admin= data[2];
 
-    //         }
+        //                         var result="";
+        //                         for (var i=0;i<barbers.length;i++){
+        //                             result+=
+        //                             `<tr>
+        //                             <td class="name">${barbers[i].first_name+" "+barbers[i].last_name}</td>
+        //                             <td class="email d-none d-xl-table-cell">${barbers[i].email}</td>
+        //                             <td class="d-none d-xl-table-cell">${barbers[i].last_active}</td>
+        //                             <td class="type d-none d-xl-table-cell">Barber</td>
+        //                             <td><i class="fa fa-trash" style="cursor:pointer" name="barber-${barbers[i].barberid}"></i></td>
+        //                             </tr>`
+        //                         }
 
-    //     })
+        //                         for (var i=0;i<customers.length;i++){
+        //                             result+=
+        //                             `<tr>
+        //                             <td class="name">${customers[i].first_name+" "+customers[i].last_name}</td>
+        //                             <td class="email d-none d-xl-table-cell">${customers[i].email}</td>
+        //                             <td class="d-none d-xl-table-cell">${customers[i].last_active}</td>
+        //                             <td class="type d-none d-xl-table-cell">Customer</td>
+        //                             <td><i class="fa fa-trash" style="cursor:pointer" name="customer-${customers[i].customerid}"></i></td>
+        //                             </tr>`
+        //                         }
+
+        //                         for (var i=0;i<admin.length;i++){
+        //                             result+=
+        //                             `<tr>
+        //                             <td class="name">${admin[i].first_name+" "+admin[i].last_name}</td>
+        //                             <td class="email d-none d-xl-table-cell">${admin[i].email}</td>
+        //                             <td class="d-none d-xl-table-cell">${admin[i].last_active}</td>
+        //                             <td class="type d-none d-xl-table-cell">Admin</td>
+        //                             <td><i class="fa fa-trash" style="cursor:pointer" name="admin-${admin[i].adminid}"></i></td>
+        //                             </tr>`
+        //                         }
+
+
+        //                         $("tbody").html(result);
+
+        //                         $(".fa-trash").click(trashClicked);
+        //                         $(".choice>.fa-times").click(hideModal);
+        //                         $(".choice>.fa-check").click(tickClicked);
+
+        //                     }    
+
+
+        //                 }
+        //             });
+
+        //         }
+
+        //     })
     </script>
 
 </html>
