@@ -98,6 +98,7 @@ require_once("includes/database.php");
             const transacID = $(this).attr('id');
             const url = "viewAppointmentAjax.php";
             const customer_name =  $(this).siblings(".customer_name").text()
+            const stylist = $(this).siblings(".stylist").text()
 
             $.ajax({
                     url: url,
@@ -116,6 +117,7 @@ require_once("includes/database.php");
 
                     
                     $("span#customer-name").html(customer_name)
+                    $("#stylist_name").text(stylist);
                     $("span#transactionID").html(transacID)
                     $("span#appointment_datetime").html(data[0]['appointment_datetime'])
                     $("span#paymentDate").html(data[0]['payment_date'])
@@ -179,6 +181,11 @@ require_once("includes/database.php");
                                                     <tr>
                                                         <th style="color:red" id="cancelled">
                                                             Cancelled
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Stylist : <span id="stylist_name"><span>
                                                         </th>
                                                     </tr>
                                                     <tr>
@@ -261,7 +268,7 @@ require_once("includes/database.php");
                                 echo "<td class='customer_name'>" . $row["customerName"] . "</td>";
                                 echo "<td>" . $row["appointmentdate"] . "</td>";
                                 echo "<td>" . $row["start_time"] . "</td>";
-                                echo "<td>" . $row["stylist"] . "</td>";
+                                echo "<td class='stylist'>" . $row["stylist"] . "</td>";
                                 echo "<td>" . $row["paymentid"] . "</td>";
                                 echo "<td id = " . $row["transactionid"] . " class = \"clickReceipt\" style=\"cursor:pointer; color:#003f87;font-weight: 500;\">Click here for complete info</td>";
 
