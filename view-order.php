@@ -144,6 +144,8 @@ require_once("includes/database.php");
                     // console.log(result)
                     $(".items-container").html(result)
                     $("#date").text(data[0].date)
+                    if(data[0].is_cancelled) $("#cancelled").show();
+                    else $("#cancelled").hide();
                 });
             $(".overlay").show();
         });
@@ -185,11 +187,11 @@ require_once("includes/database.php");
                                                             Invoice #<span id="orderNo"><span>
                                                         </th>
                                                     </tr>
-                                                    <!-- <tr>
-                                                        <th>
-                                                            Payment Type : <span id="paymentType"><span>
+                                                    <tr>
+                                                        <th id='cancelled' style="color:red">
+                                                            Cancelled
                                                         </th>
-                                                    </tr> -->
+                                                    </tr>
                                                     <tr>
                                                         <th>
                                                             Payment Date : <span id="paymentDate"><span>

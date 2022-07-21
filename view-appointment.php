@@ -119,7 +119,9 @@ require_once("includes/database.php");
                     $("span#transactionID").html(transacID)
                     $("span#appointment_datetime").html(data[0]['appointment_datetime'])
                     $("span#paymentDate").html(data[0]['payment_date'])
-                    
+                    if (data[0].is_cancelled) $("#cancelled").show();
+                    else $("#cancelled").hide();
+                    // console.log(data)
                     $.each(data, function(i, obj) {
                         sum += parseInt(obj['price'])
                         result +=
@@ -172,6 +174,11 @@ require_once("includes/database.php");
                                                     <tr>
                                                         <th>
                                                             Transaction #<span id="transactionID"><span>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="color:red" id="cancelled">
+                                                            Cancelled
                                                         </th>
                                                     </tr>
                                                     <tr>
