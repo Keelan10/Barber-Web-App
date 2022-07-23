@@ -12,6 +12,8 @@ if (isset($_POST["orderId"])){
         AND transactions.paymentid=payment.paymentid;";
 
     $Result= $conn->query($SQL);
+    
+    header('Content-Type: application/json');
     echo json_encode($Result->fetchAll());
 }
 

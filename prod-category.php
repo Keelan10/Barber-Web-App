@@ -18,6 +18,7 @@
         array_push($a,$entry);
     }
     
+    header('Content-Type: application/json');
     echo JSON_encode($a);
     
     

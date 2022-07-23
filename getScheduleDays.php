@@ -6,5 +6,6 @@ if(isset($_POST["barberid"])){
     $preparedStatement = $conn->prepare("SELECT day,start_time FROM schedules,scheduledays WHERE barberid=? AND schedules.scheduleid=scheduledays.scheduleid");
     $preparedStatement->execute(array($_POST["barberid"]));
 
+    header('Content-Type: application/json');
     echo json_encode($preparedStatement->fetchAll());
 }

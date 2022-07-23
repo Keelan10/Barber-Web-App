@@ -23,6 +23,7 @@ if($_POST){
     
     $preparedStatement->execute( array($_POST["barberid"],$date) );
 
+    header('Content-Type: application/json');
     echo json_encode($preparedStatement->fetchAll());
 
     // SELECT appointment.transactionid,appointment.appointmentdate,appointment.start_time, SUM(duration) as duration, DATE_ADD(start_time,INTERVAL SUM(duration) minute) AS end_time

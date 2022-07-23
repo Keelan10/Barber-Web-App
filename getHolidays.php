@@ -26,5 +26,6 @@
         $preparedStatement = $conn->prepare("SELECT start_date, end_date FROM holiday WHERE barberid=?");
         $preparedStatement->execute(array($_POST["barberid"]));
     
+        header('Content-Type: application/json');
         echo json_encode($preparedStatement->fetchAll());
     }
