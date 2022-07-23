@@ -352,7 +352,62 @@ i {
     padding-left: 5px;
 }
 
-.Step-btn {
+.timeForm {
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    width: 200px;
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: #fff;
+    background: #fff;
+    position: relative;
+}
+
+.timeForm select {
+    font-size: 13px;
+    padding: 5px 8px;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.timeForm:after {
+    top: 50%;
+    left: 85%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(0, 0, 0, 0);
+    border-top-color: #000000;
+    border-width: 5px;
+    margin-top: -2px;
+    z-index: 100;
+}
+
+.timeForm select:focus {
+    outline: none;
+}
+
+.timeForm {
+    margin-left: 1rem;
+}
+
+.timeForm label {
+    font-size: 14px;
+    padding-left: 5px;
+}
+
+
+.Submit-btn {
     float: right;
     padding: 0.5rem;
     padding-left: 1rem;
@@ -362,10 +417,13 @@ i {
     border: 2px solid #222;
     border-radius: 10px;
 }
-
-.Step-btn:hover {
+.Submit-btn:hover:enabled {
     background-color: #222;
     color: white;
+}
+
+.timeForm{
+    margin: 1rem;
 }
 
 .error {
