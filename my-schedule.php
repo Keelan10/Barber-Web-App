@@ -44,7 +44,9 @@
                     AND cast(concat(appointmentdate," ",start_time) as datetime)>=NOW()
                     AND transactions.is_cancelled = 0
                     AND appointment.no_show=1
-                    AND transactions.customerid='.$conn->quote($_SESSION["customer_userid"]).';';
+                    AND transactions.customerid='.$conn->quote($_SESSION["customer_userid"]).'
+                    ORDER BY appointmentdate DESC, start_time
+                    ;';
                     // GROUP BY appointment.transactionid;';
 
                 
