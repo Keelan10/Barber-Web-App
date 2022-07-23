@@ -115,8 +115,8 @@
                 .done(function(data) {
                     var result = "";
                     var sum = 0;
+                    var duration=0;
 
-                    
                     $("span#customer-name").html(customer_name)
                     $("#stylist_name").text(stylist);
                     $("span#transactionID").html(transacID)
@@ -126,6 +126,7 @@
                     else $("#cancelled").hide();
                     // console.log(data)
                     $.each(data, function(i, obj) {
+                        duration+=obj.duration
                         sum += parseInt(obj['price'])
                         result +=
                         `<tr>
@@ -138,7 +139,7 @@
                     <td class="alignright" width="80%">Total</td>
                     <td class="alignright">Rs ${sum}</td>
                     </tr>`;
-
+                    $("#appointment_duration").html(duration+" mins")
                     $(".items-container").html(result)
                     
                 })
@@ -188,6 +189,11 @@
                                                     <tr>
                                                         <th>
                                                             Appointment Date/Time : <span id="appointment_datetime"><span>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Duration : <span id="appointment_duration"><span>
                                                         </th>
                                                     </tr>
                                                     <tr>
@@ -245,7 +251,8 @@
                     WHERE transactions.transactionid=appointment.transactionid
                     AND transactions.paymentid=payment.paymentid
                     AND barber.barberid=appointment.barberid
-                    AND transactions.customerid='.$conn->quote($_SESSION["customer_userid"]).';';
+                    AND transactions.customerid='.$conn->quote($_SESSION["customer_userid"]).'
+                    ORDER BY appointmentdate DESC, start_time;';
 
                     $Results=$conn->query($sqlStatement);
                     $numRows=$Results->rowCount();

@@ -114,6 +114,7 @@ require_once("includes/database.php");
                 .done(function(data) {
                     var result = "";
                     var sum = 0;
+                    var duration=0;
 
                     
                     $("span#customer-name").html(customer_name)
@@ -125,6 +126,7 @@ require_once("includes/database.php");
                     else $("#cancelled").hide();
                     // console.log(data)
                     $.each(data, function(i, obj) {
+                        duration+=obj.duration
                         sum += parseInt(obj['price'])
                         result +=
                         `<tr>
@@ -137,7 +139,7 @@ require_once("includes/database.php");
                     <td class="alignright" width="80%">Total</td>
                     <td class="alignright">Rs ${sum}</td>
                     </tr>`;
-
+                    $("#duration").html(duration+" mins")
                     $(".items-container").html(result)
                     
                 })
@@ -193,6 +195,12 @@ require_once("includes/database.php");
                                                             Appointment Date/Time : <span id="appointment_datetime"><span>
                                                         </th>
                                                     </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Duration : <span id="duration"><span>
+                                                        </th>
+                                                    </tr>
+
                                                     <tr>
                                                         <th>
                                                             Payment Date : <span id="paymentDate"><span>

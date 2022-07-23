@@ -5,7 +5,7 @@ session_start();
 if (isset($_POST["transactionID"])) {
     
     $transactionID = $_POST['transactionID'];
-    $preparedStatement = $conn->prepare("SELECT DATE_FORMAT(paymentdate,'%M %d %Y') AS payment_date,  CONCAT(DATE_FORMAT(appointment.appointmentdate,'%M %d %Y'), ', ', DATE_FORMAT(appointment.start_time,'%H:%i')) as appointment_datetime, service.name, appointmentdetails.price, is_cancelled
+    $preparedStatement = $conn->prepare("SELECT DATE_FORMAT(paymentdate,'%M %d %Y') AS payment_date,  CONCAT(DATE_FORMAT(appointment.appointmentdate,'%M %d %Y'), ', ', DATE_FORMAT(appointment.start_time,'%H:%i')) as appointment_datetime, service.name, duration, appointmentdetails.price, is_cancelled
     FROM appointmentdetails, appointment, service, transactions,payment
     WHERE appointment.transactionid = ?
     AND appointmentdetails.transactionid = appointment.transactionid
