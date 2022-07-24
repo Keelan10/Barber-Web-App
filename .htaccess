@@ -1,0 +1,35 @@
+# Turn rewrite engine on
+#https://code.tutsplus.com/tutorials/using-htaccess-files-for-pretty-urls--net-6049
+
+
+Options +FollowSymlinks
+RewriteEngine on
+#RewriteCond %{SCRIPT_FILENAME} !-d
+#RewriteCond %{SCRIPT_FILENAME} !-f
+#Options -MultiViews
+
+# map neat URL to internal URL
+RewriteRule ^service/list/$   webServices/RestController.php?resource=service&page_key=list [nc,qsa]
+RewriteRule ^service/list$   webServices/RestController.php?resource=service&page_key=list [nc,qsa]
+
+RewriteRule ^service/create/$   webServices/RestController.php?resource=service&page_key=create [nc,qsa]
+RewriteRule ^service/create$   webServices/RestController.php?resource=service&page_key=create [nc,qsa]
+
+RewriteRule ^service/delete/([0-9]+)/$   webServices/RestController.php?resource=service&page_key=delete&id=$1 [nc,qsa]
+RewriteRule ^service/delete/([0-9]+)$   webServices/RestController.php?resource=service&page_key=delete&id=$1 [nc,qsa]
+
+RewriteRule ^service/update/([0-9]+)/$   webServices/RestController.php?resource=service&page_key=update&id=$1 [nc,qsa]
+RewriteRule ^service/update/([0-9]+)$   webServices/RestController.php?resource=service&page_key=update&id=$1 [nc,qsa]
+
+
+RewriteRule ^product/list/$   webServices/RestController.php?resource=product&page_key=list [nc,qsa]
+RewriteRule ^product/list$   webServices/RestController.php?resource=product&page_key=list [nc,qsa]
+
+RewriteRule ^product/create/$   webServices/RestController.php?resource=product&page_key=create [nc,qsa]
+RewriteRule ^product/create$   webServices/RestController.php?resource=product&page_key=create [nc,qsa]
+
+RewriteRule ^product/delete/([0-9]+)/$   webServices/RestController.php?resource=product&page_key=delete&id=$1 [nc,qsa]
+RewriteRule ^product/delete/([0-9]+)$   webServices/RestController.php?resource=product&page_key=delete&id=$1 [nc,qsa]
+
+RewriteRule ^product/update/([0-9]+)/$   webServices/RestController.php?resource=product&page_key=update&id=$1 [nc,qsa]
+RewriteRule ^product/update/([0-9]+)$   webServices/RestController.php?resource=product&page_key=update&id=$1 [nc,qsa]
