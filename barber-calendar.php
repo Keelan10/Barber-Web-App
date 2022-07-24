@@ -7,55 +7,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Work Calendar</title>
 
-    <?php 
-        $active = "barbercalendar";
-        include "includes/barber-menu.php";
+    <?php
+    $active = "barbercalendar";
+    include "includes/barber-menu.php";
     ?>
     <div class="content">
         <h1>Working hours</h1>
         <table class="order-list">
             <thead>
                 <tr>
-                    <th>Customer</th>
-                    <th style="width:10%">Phone Number</th>
-                    <th style="width:10%">Day</th>
-                    <th style="width:10%">Time</th>
-                    <th>Services</th>       
+                    <th width=30%>Customer</th>
+                    <th style="width:12%">Phone Number</th>
+                    <th style="width:12%">Day</th>
+                    <th style="width:12%">Time</th>
+                    <th>Services</th>
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                    require_once("includes/database.php");
+                <?php
+                require_once("includes/database.php");
 
-                    // $name= $_SESSION["username"];
-                    $sqlStatement="SELECT * FROM appointment WHERE customerid=1";
+                // $name= $_SESSION["username"];
+                $sqlStatement = "SELECT appointment.transactionid,CONCAT(customer.first_name,\" \",customer.last_name) as custname,customer.phone,appointmentdate,start_time,transactions.paymentid
+                                    FROM appointment,payment,transactions,barber,customer
+                                    WHERE transactions.transactionid=appointment.transactionid
+                                    AND transactions.paymentid=payment.paymentid
+                                    AND barber.barberid=appointment.barberid
+                                    AND customer.customerid = transactions.customerid
+                                    AND transactions.is_cancelled=0
+                                    AND appointmentdate>=CURDATE()
+                                    AND barber.barberid = " . $conn->quote($_SESSION['barber_userid']) . ";";
+
+                $Results = $conn->query($sqlStatement);
+                $numRows = $Results->rowCount();
+
+
+                if ($numRows == 0) echo "<td colspan=\"100%\" style=\"text-align: center;background-color:#F2F2F2\"> No Appointment information on file </td>";
+                else {
+                    $i = 0;
+                    while ($row = $Results->fetch()) {
+                        if ($i == 0) {
+                            echo "<tr class=\"even\">";
+                            $i = 1;
+                        } else {
+                            echo "<tr>";
+                            $i = 0;
+                        }
+
+                        echo "<td>" . $row["custname"] . "</td>";
+                        echo "<td>" . $row["phone"] . "</td>";
+                        echo "<td>" . date("D", strtotime($row["appointmentdate"])) . " " . $row["appointmentdate"] . "</td>";
+                        echo "<td>" . date("H:i", strtotime($row["start_time"])) . " GMT+4</td>";
+
+
+
+                        $serviceSQL =
+                            "SELECT service.name
+                            FROM appointmentdetails,service
+                            WHERE service.serviceid=appointmentdetails.serviceid
+                            AND  transactionid=" . $row["transactionid"] . ";";
+
+                        $serviceResults = $conn->query($serviceSQL); //USE PREPARED STATEMENTS AFTERWARDS
+                        $services = $serviceResults->fetchall();
+
+                        $string = "";
+                        for ($j = 0; $j < sizeof($services) - 1; $j++) {
+                            $string .= $services[$j]["name"] . ", ";
+                        }
+                        $string .= $services[sizeof($services) - 1]["name"];
+                        // echo $string;                    
+                        echo "<td>" . $string . "</td>";
+                    }
+                }
                 ?>
-                <tr class="even">
-                    <td>Kezhilen Motean</td>   
-                    <td>57655508</td>                 
-                    <td>Tue 2/12/2021</td>
-                    <td>10:00 GMT+4</td>
-                    <td>Cut, Faire moi beau</td>
-                </tr>
-                <tr class="odd">
-                    <td>Kenylen Motean</td>
-                    <td>58253488</td>
-                    <td>Fri 2/1/2022</td>
-                    <td>14:30 GMT+4</td>
-                    <td>Bowl cut, Beard Trim</td>
-                </tr>
-                <tr class="even">
-                    <td>Keelan Motean</td>
-                    <td>59294259</td>
-                    <td>Mon 2/5/2022</td>
-                    <td>18:30 GMT+4</td>
-                    <td>Beard Trim</td>
-                </tr>
-                <tr style="background-color: #F2F2F2">
-                    <!-- <td colspan="100%" style="text-align: center;background-color:#F2F2F2"> No visit information on file </td> -->
-                </tr>
             </tbody>
         </table>
     </div>
-</body>
+    </body>
+
 </html>
