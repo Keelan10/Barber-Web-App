@@ -5,8 +5,8 @@ session_start();
 
 if (isset($_SESSION["customer_userid"]) && isset($_POST["products"]) && !empty($_POST["products"]) ){
     $products = $_POST["products"];
-    // print_r($_POST["products"]);
-    // die();
+    
+
     // decrement from stock
     // Note that product names are unique
     $decrementStock = $conn->prepare("update product set quantity = quantity - ? where productid = ?");
@@ -42,8 +42,6 @@ if (isset($_SESSION["customer_userid"]) && isset($_POST["products"]) && !empty($
             $qty = $products[$i]["qty"];
             $name = $products[$i]["name"];
             $productId=$products[$i]["id"];
-            // print_r($products);
-            // echo $qty;
             
             // decrement in stock
             $decrementStock->execute(array($qty, $productId));
@@ -63,14 +61,7 @@ if (isset($_SESSION["customer_userid"]) && isset($_POST["products"]) && !empty($
         // show the error message
         die($e->getMessage());
     }
-    // $preparedStatement->execute(array($_POST["transactionid"]));
-
-    // if ($preparedStatement->rowCount()==0){
-    //     echo "failure";
-    // }else{
-    //     echo "success";
-    // }
-    
+   
 
 }
 
